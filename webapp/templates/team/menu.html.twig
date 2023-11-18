@@ -48,6 +48,10 @@
                         href="{{ path('team_docs') }}"><i class="fas fa-file-alt"></i> Docs</a>
                 </li>
             {% endif %}
+            <li class="nav-item">
+                <a class="nav-link{% if current_route == 'team_course' %} active{% endif %}"
+                    href="{{ path('team_course') }}"><i class="fas fa-book"></i> Course</a>
+            </li>
 
             {% if is_granted('ROLE_JURY') or is_granted('ROLE_BALLOON') %}
                 <li class="nav-item">
@@ -97,4 +101,6 @@
     </div>
   </div>
 </nav>
-{% include 'partials/scoreboard_progress_bar.html.twig' with {margin: -16, contest: current_team_contest} %}
+{% if not hide_progress_bar is defined or not hide_progress_bar %}
+    {% include 'partials/scoreboard_progress_bar.html.twig' with {margin: -16, contest: current_team_contest} %}
+{% endif %}

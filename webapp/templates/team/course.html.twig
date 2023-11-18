@@ -1,0 +1,57 @@
+{% extends 'team/base.html.twig' %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header" style="font-family: Roboto, sans-serif; display: flex;">
+            <span style="font-weight: bold;"> Assignments </span>
+            <span id="contesttimer" style="color: DimGray; margin-left: auto;">
+                started: {{ contestFirst.starttime | printtime }} - ends: {{ contestLast.endtime | printtime }}
+            </span>
+        </div>
+    </div>
+
+    <table class="scoreboard center" style="margin-top: 15px;">
+        <thead>
+            <tr class="scoreheader">
+                <th class="px-1" style="top: 56px;">rank</th>
+                <th class="px-1" style="top: 56px;">team</th>
+                <th class="px-1" style="top: 56px;">correct</th>
+                <th class="px-1" style="top: 56px;">weeks</th>
+                <th class="px-1" style="top: 56px;">passed</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for teamName, info in data %}
+                {% set percentage = (info.correct / totalQuestions * 100)|round %}
+
+                <tr class="{{ myTeamId is defined and myTeamId == info.teamid ? 'scorethisisme' : '' }} {{ loop.first ? 'sortorderswitch' : '' }}" style="height: 46px;">
+                    <td class="scoretc">{{ loop.index }}</td>
+                    <td class="scoretn">{{ info.teamName }}</td>
+                    <td class="scoretc">
+                        <div class="{{ percentage >= passPercentage ? 'score_correct' : 'score_neutral'}}" style="vertical-align: middle; height: 38px; ">
+                            {{ info.correct }}
+                            <span>
+                                {{ percentage }}%
+                            </span>
+                        </div>
+                    </td>
+                    <td class="scoretc">
+                        <div class="{{ info.weeks >= minWeeksToPass ? 'score_correct' : 'score_neutral'}}" style="font-size: 100%; vertical-align: middle; height: 38px; line-height: 38px;">
+                            {{ info.weeks }}/{{ minWeeksToPass }}
+                        </div>
+                    </td>
+                    <td class="scoretc">
+                        <div class="{{ info.passed == 'Yes' ? 'score_correct' : (info.failed == 'Yes' ? 'score_incorrect' : '') }}" style="font-size: 100%; vertical-align: middle; height: 38px; line-height: 38px;">
+                            {{ info.passed }}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p id="lastmod">
+        Last Update: {{ null | printtime('D d M Y H:i:s T') }}<br/>
+        using <a href="https://www.domjudge.org/" target="_top">DOMjudge</a>
+    </p>
+{% endblock %}
