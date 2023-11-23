@@ -42,6 +42,20 @@
                 <div class="p-2">
                     Result: {{ judging.result | printResult }}
                 </div>
+                {# Display testcase results #}
+                {% if runsAllCases and not judging.submission.importError %}
+                    <div class="p-2">
+                        Testcase Runs:
+                    </div>
+                    <div class="p-2">
+                        {% if judging is null %}
+                            {% set judgingDone = false %}
+                        {% else %}
+                            {% set judgingDone = judging.endtime is not empty %}
+                        {% endif %}
+                        {{ runsAllCases | displayTestcaseResults(judgingDone) }}
+                    </div>
+                {% endif %}
                 {% if judging.result == 'correct' and judging.submission.contest.getRuntimeAsScoreTiebreaker() %}
                     <div class="p-2">
                         Max. Runtime: <b>{{ "%0.3f s" | format(judging.getMaxRuntime()) }}</b>
