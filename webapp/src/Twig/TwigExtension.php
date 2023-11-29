@@ -405,7 +405,7 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
         $lastTypeSample = true;
         foreach ($testcases as $key => $testcase) {
             if ($testcase['sample'] != $lastTypeSample) {
-                $results        .= ' | ';
+                $results        .= '&thinsp;|&thinsp;';
                 $lastTypeSample = $testcase['sample'];
             }
             $class = $submissionDone ? 'secondary' : 'primary';

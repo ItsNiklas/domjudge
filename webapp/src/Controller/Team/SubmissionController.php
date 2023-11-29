@@ -149,7 +149,6 @@ class SubmissionController extends BaseController
         }
 
         $runs = [];
-        $runsAllCases = [];
         if ($showSampleOutput && $judging && $judging->getResult() !== 'compiler-error') {
             $outputDisplayLimit    = (int)$this->config->get('output_display_limit');
             $outputTruncateMessage = sprintf("\n[output display truncated after %d B]\n", $outputDisplayLimit);
@@ -161,7 +160,7 @@ class SubmissionController extends BaseController
                 ->leftJoin('jr.output', 'jro')
                 ->select('t', 'jr', 'tc')
                 ->andWhere('t.problem = :problem')
-                #->andWhere('t.sample = 1')
+                ->andWhere('t.sample = 1')
                 ->setParameter('judging', $judging)
                 ->setParameter('problem', $judging->getSubmission()->getProblem())
                 ->orderBy('t.ranknumber');
@@ -189,12 +188,6 @@ class SubmissionController extends BaseController
             $runs = $queryBuilder
                 ->getQuery()
                 ->getResult();
-
-            if ($showAllTestcases) {
-                $runsAllCases = array_map(function($runResult) {return $runResult[0];}, $runs);
-            }
-
-            $runs = array_filter($runs, function($runResult) {return $runResult[0]->getSample() == 1;});
         }
 
         $actuallyShowCompile = $showCompile == self::ALWAYS_SHOW_COMPILE_OUTPUT
@@ -207,7 +200,6 @@ class SubmissionController extends BaseController
             'allowDownload' => $allowDownload,
             'showSampleOutput' => $showSampleOutput,
             'runs' => $runs,
-            'runsAllCases' => $runsAllCases,
             'showAllTestcases' => $showAllTestcases,
             'showTooLateResult' => $showTooLateResult,
         ];
